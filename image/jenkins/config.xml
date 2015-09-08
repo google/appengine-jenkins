@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson>
+  <disabledAdministrativeMonitors/>
+  <numExecutors>2</numExecutors>
+  <mode>NORMAL</mode>
+  <useSecurity>true</useSecurity>
+  <!-- Preconfigure Jenkins with reveser-proxy-auth-plugin.
+       We trust App Engine to tell Jenkins which user was logged in.  -->
+  <securityRealm class="org.jenkinsci.plugins.reverse_proxy_auth.ReverseProxySecurityRealm" plugin="reverse-proxy-auth-plugin@1.4.0">
+    <proxyTemplate/>
+    <authContext/>
+    <authorityUpdateCache/>
+    <inhibitInferRootDN>false</inhibitInferRootDN>
+    <userSearchBase></userSearchBase>
+    <userSearch>uid={0}</userSearch>
+    <updateInterval>15</updateInterval>
+    <forwardedUser>X-AppEngine-User-Email</forwardedUser>
+    <headerGroups>X-Forwarded-Groups</headerGroups>
+    <headerGroupsDelimiter>|</headerGroupsDelimiter>
+  </securityRealm>
+  <views>
+    <hudson.model.AllView>
+      <owner class="hudson" reference="../../.."/>
+      <name>All</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+    </hudson.model.AllView>
+  </views>
+</hudson>

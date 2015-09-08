@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.google.jenkins.plugins.health.HealthCheckManager plugin="google-cloud-health-check@0.2">
+  <derivedPages>
+    <entry>
+      <string>basic</string>
+      <com.google.jenkins.plugins.health.HealthZone>
+        <name>basic</name>
+        <components class='com.google.common.collect.ImmutableList'>
+          <com.google.jenkins.plugins.health.ExecutorCheck>
+            <minExecutors>1</minExecutors>
+            <labels class="com.google.common.collect.SingletonImmutableSet">
+            </labels>
+          </com.google.jenkins.plugins.health.ExecutorCheck>
+        </components>
+      </com.google.jenkins.plugins.health.HealthZone>
+    </entry>
+  </derivedPages>
+  <type>com.google.jenkins.plugins.health.HealthZone</type>
+</com.google.jenkins.plugins.health.HealthCheckManager>
