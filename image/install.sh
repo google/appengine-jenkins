@@ -316,7 +316,7 @@ IMG_FROM_SRC="local_developer_tools_bundle/jenkins:latest"
 IMG_UPLOAD="gcr.io/"${TARGET_PROJECT}"/jenkins-localbuild:latest"
 
 if ! networkExists $TARGET_PROJECT jenkins; then
-  gcloud --quiet compute networks create jenkins --range 10.0.0.0/24 --project $TARGET_PROJECT
+  gcloud --quiet compute networks create jenkins --range '10.0.0.0/24' --project $TARGET_PROJECT
   if [ $? -ne 0 ]; then
     echo
     echo "*** 'gcloud compute networks create jenkins' failed. ***"
