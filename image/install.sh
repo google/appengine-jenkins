@@ -242,6 +242,11 @@ function createDockerfile() {
 FROM $img
 RUN true
 EOF
+  if [[ "$USE_TEST_IMG" = true ]]; then
+    cat >> ${tmp_dir}/Dockerfile <<EOF
+ENV USE_TEST_IMG true
+EOF
+  fi
 }
 
 function isHealthy() {
@@ -253,6 +258,7 @@ function isHealthy() {
   for TRY in $(seq 1 $RETRY_MAX_COUNT); do
     local status_code=$(curl -w %{http_code} -s --output /dev/null -L ${url})
     [[ $status_code -eq 200 ]] && return 0
+    sleep 1
     [[ $(expr $TRY % 50) -eq 0 ]] && (printf ".\n") || (printf ".")
   done
   return 1
@@ -295,9 +301,9 @@ if [[ "$YESORNO" != "y" && "$YESORNO" != "Y" ]]; then
 fi
 
 if [[ "$SEND_USAGE_REPORTS" = true ]]; then
-  gcloud compute project-info add-metadata --metadata google_report_analytics_id=UA-36037335-1,google_report_usage=true
+  gcloud compute project-info add-metadata --metadata google_report_analytics_id=UA-36037335-1,google_report_usage=true --project $TARGET_PROJECT
 else
-  gcloud compute project-info remove-metadata --keys google_report_analytics_id,google_report_usage
+  gcloud compute project-info remove-metadata --keys google_report_analytics_id,google_report_usage --project $TARGET_PROJECT
 fi
 
 echo

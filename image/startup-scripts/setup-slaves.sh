@@ -67,6 +67,9 @@ for AN_SDC in ${SDC//;/ }
 do
   SLAVE_NAME=jenkins-slave-$AN_SDC
   IMAGE_NAME="gcr.io/developer_tools_bundle/$SLAVE_NAME"
+  if [[ "$USE_TEST_IMG" = true ]]; then
+    IMAGE_NAME=$IMAGE_NAME":testing"
+  fi
   echo "pull slave image $IMAGE_NAME ..."
   gcloud docker pull $IMAGE_NAME
   echo "Spin up slave container $SLAVE_NAME with label $SLAVE_NAME"
@@ -93,7 +96,19 @@ CONFIG_XML_SLAVE
 # Child container doesn't know its parent container's hostname, but it does
 # know its IP.
 export PARENT_IP=\$(/sbin/ip route | awk '/default/ {print \$3}')
-curl -O http://\$PARENT_IP:$JMPORT/jnlpJars/$SLAVE_JAR
+export SLAVE_SUCCESS=""
+echo "download Jenkins Slave jar ..."
+for TRY in $(seq 1 $RETRY); do
+  curl -O http://\$PARENT_IP:$JMPORT/jnlpJars/$SLAVE_JAR|| true
+  # Verify that a jar file, not the "Please wait for Jenkins to be up" page
+  # was downloaded. This should also cover the case that no file was downloaded.
+  if zip -T $SLAVE_JAR; then
+    SLAVE_SUCCESS=true
+    break;
+  fi
+  echo "Jenkins may not be up and running yet, waiting..." 1>&2
+  sleep $SLEEP
+done
 
 # Download the slave-agent.jnlp file. At this point Jenkins is already up,
 # therefore we won't see the "Please wait for Jenkins..." page any more.

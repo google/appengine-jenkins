@@ -33,6 +33,7 @@ RUN apt-get update && apt-get upgrade -y && \
       ca-certificates-java \
       cron \
       curl \
+      rsyslog \
       emacs-nox \
       gcc \
       git \
@@ -175,3 +176,5 @@ RUN wget http://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip
     unzip gradle-$GRADLE_VERSION-bin.zip && \
     rm gradle-$GRADLE_VERSION-bin.zip
 ENV PATH /gradle-$GRADLE_VERSION/bin:$PATH
+
+ENTRYPOINT ["/bin/bash", "/google/scripts/onrun.sh"]

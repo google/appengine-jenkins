@@ -25,8 +25,7 @@ EXPOSE 8080
 
 ENV DOCKER_HOST unix:///var/run/docker.sock
 
-# Configure supervisord to start Jenkins, NGINX, and others (like wrapdocker)
-ENTRYPOINT "/usr/bin/supervisord"
+# Configure supervisord to start Jenkins and NGINX
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Seed Jenkins default configuration.
@@ -41,6 +40,8 @@ RUN chmod a+x /startup-scripts/*.sh
 # nested in outer AUFS directory, which is not supported and will
 # cause slave container setup failure.
 VOLUME /container-tmp
+
+ENV ONRUN $ONRUN "/usr/bin/supervisord"
 
 # Set the storage bucket to be used when backup/restore.
 # If unset, the bucket vm-containers.APPID.appspot.com will be used.
