@@ -1,3 +1,5 @@
 {"timestamp":"1443118585","author":"ojarjur","resolved":true}
 
 {"timestamp":"1443118585","author":"ojarjur","location":{"commit":"7022024f633424b46829cb125adb9de4ae8bea51","path":"image/install.sh","range":{"startLine":319}},"description":"I would feel more secure if the \"10.0.0.0/24\" argument was enclosed in single quotes, but I won't hold up this review for that."}
+
+{"timestamp":"1443123105","author":"ojarjur","description":"LGTM"}
