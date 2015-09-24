@@ -1,0 +1,1 @@
+{"timestamp":"1443132913","reviewRef":"refs/heads/features/astroilov-updates","targetRef":"refs/heads/master","requester":"astroilov@google.com","description":"Update slave startup to retry. Explicitly mark project in install\nscript. Clean up docker files. Remove obsolete 'wrapdocker'."}
