@@ -111,6 +111,15 @@ function parseArguments() {
   fi
 }
 
+function makeTempDir() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    local tmp_dir=$(mktemp -d -t "zeno.XXXXXX")
+  else
+    local tmp_dir=$(mktemp -d --tmpdir=$(pwd))
+  fi
+  echo "$tmp_dir";
+}
+
 function defaultModuleExists() {
   local project=$1
   local count=$(gcloud preview app modules list default --project $project 2>&1 \
@@ -124,7 +133,7 @@ function defaultModuleExists() {
 
 function deployDefaultModule() {
   local target_project=$1
-  local tmp_dir=$(mktemp -d --tmpdir=$(pwd))
+  local tmp_dir=$(makeTempDir)
   echo
   echo "Default module doesn't exist, deploying default module now..."
   cat > ${tmp_dir}/app.yaml <<EOF
@@ -330,7 +339,7 @@ if ! networkExists $TARGET_PROJECT jenkins; then
   fi
 fi
 
-DEPLOY_DIR=$(mktemp -d --tmpdir=$(pwd))
+DEPLOY_DIR=$(makeTempDir)
 createAppDotYaml $DEPLOY_DIR $JENKINS_CPU $JENKINS_MEMORY $JENKINS_DISK
 if [[ "$BUILD_FROM_SRC" = true ]]; then
   if ! buildLocalImg $IMG_FROM_SRC $IMG_UPLOAD; then
@@ -344,7 +353,7 @@ else
   createDockerfile $DEPLOY_DIR $PRE_BUILD_IMG
 fi
 
-gcloud --quiet preview app deploy --force $DEPLOY_DIR/app.yaml --project $TARGET_PROJECT \
+gcloud --quiet preview app deploy --docker-build=remote --force $DEPLOY_DIR/app.yaml --project $TARGET_PROJECT \
   --version v1 --set-default
 rm -rf $DEPLOY_DIR
 if isHealthy $TARGET_PROJECT jenkins; then
