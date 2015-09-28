@@ -1,1 +1,3 @@
 {"timestamp":"1443475054","author":"astroilov","location":{"commit":"5d51e1fb944e655173d90b29251151e558af1a93","path":"image/install.sh","range":{"startLine":304}},"description":"The correct ID is UA-36037335-1."}
+
+{"timestamp":"1443475407","author":"weizheng","location":{"commit":"5d51e1fb944e655173d90b29251151e558af1a93","path":"image/install.sh","range":{"startLine":304}},"description":"Done"}
