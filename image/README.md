@@ -25,4 +25,10 @@ code, run:
    ./install.sh --project <your project>
 run
    './insall.sh --help' to see more command line options.
-
+If you want to build and push the stable/testing version of Docker image, run:
+   (in the /bundle directory)
+   ./build.sh
+   (in the image directory)
+   ./build.sh testing|stable --push_image
+   However, you must have write permission to the GCR repo where these images
+   are stored in order to do so.

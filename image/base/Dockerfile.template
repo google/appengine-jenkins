@@ -104,7 +104,7 @@ ADD onrun.sh /google/scripts/onrun.sh
 RUN chmod +x /google/scripts/onrun.sh
 
 # Now run the wrapdocker script on startup.
-ENV ONRUN "/google/scripts/wrapdocker.sh"
+ENV ONRUN $ONRUN "/google/scripts/wrapdocker.sh"
 
 # Configure sshd to be used for Devshell connections.
 RUN rm -fv /etc/ssh/ssh_host_*

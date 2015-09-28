@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -e
+
 function showUsage() {
   local shell_name=`basename $0`
   cat << EOF
@@ -60,6 +62,7 @@ function verifyAgainstMinimum() {
   fi
 }
 
+DEPLOY_FLAVOR=stable
 function parseArguments() {
   SHOW_USAGE=false
   SEND_USAGE_REPORTS=false
@@ -87,9 +90,11 @@ function parseArguments() {
         ;;
       --build_from_src)
         BUILD_FROM_SRC=true
+        DEPLOY_FLAVOR=local_version
         ;;
       --use_test_img)
         USE_TEST_IMG=true
+        DEPLOY_FLAVOR=testing
         ;;
       --report_usage)
         SEND_USAGE_REPORTS=true
@@ -242,11 +247,6 @@ function createDockerfile() {
 FROM $img
 RUN true
 EOF
-  if [[ "$USE_TEST_IMG" = true ]]; then
-    cat >> ${tmp_dir}/Dockerfile <<EOF
-ENV USE_TEST_IMG true
-EOF
-  fi
 }
 
 function isHealthy() {
@@ -301,7 +301,7 @@ if [[ "$YESORNO" != "y" && "$YESORNO" != "Y" ]]; then
 fi
 
 if [[ "$SEND_USAGE_REPORTS" = true ]]; then
-  gcloud compute project-info add-metadata --metadata google_report_analytics_id=UA-36037335-1,google_report_usage=true --project $TARGET_PROJECT
+  gcloud compute project-info add-metadata --metadata google_report_analytics_id=UA-36037335-9,google_report_usage=true --project $TARGET_PROJECT
 else
   gcloud compute project-info remove-metadata --keys google_report_analytics_id,google_report_usage --project $TARGET_PROJECT
 fi
@@ -316,13 +316,13 @@ if ! defaultModuleExists $TARGET_PROJECT; then
   fi
 fi
 
+BUILD_DIR=tmp_build_dir
 PRE_BUILD_IMG="gcr.io/developer_tools_bundle/jenkins"
 PRE_BUILD_IMG_TEST="gcr.io/developer_tools_bundle/jenkins:testing"
-IMG_FROM_SRC="local_developer_tools_bundle/jenkins:latest"
-IMG_UPLOAD="gcr.io/"${TARGET_PROJECT}"/jenkins-localbuild:latest"
+UPLOADED_LOCAL_BUILD_IMG="gcr.io/"${TARGET_PROJECT}"/jenkins:local_version"
 
 if ! networkExists $TARGET_PROJECT jenkins; then
-  gcloud --quiet compute networks create jenkins --range '10.0.0.0/24' --project $TARGET_PROJECT
+  gcloud --quiet compute networks create jenkins --project $TARGET_PROJECT
   if [ $? -ne 0 ]; then
     echo
     echo "*** 'gcloud compute networks create jenkins' failed. ***"
@@ -330,14 +330,18 @@ if ! networkExists $TARGET_PROJECT jenkins; then
   fi
 fi
 
-DEPLOY_DIR=$(mktemp -d --tmpdir=$(pwd))
+BUILD_DIR=tmp_build_dir
+DEPLOY_DIR=${BUILD_DIR}/deploy_${DEPLOY_FLAVOR}
+rm -rf $DEPLOY_DIR
+mkdir -p $DEPLOY_DIR
 createAppDotYaml $DEPLOY_DIR $JENKINS_CPU $JENKINS_MEMORY $JENKINS_DISK
 if [[ "$BUILD_FROM_SRC" = true ]]; then
-  if ! buildLocalImg $IMG_FROM_SRC $IMG_UPLOAD; then
-    echo "Either failed to build $IMG_FROM_SRC or failed to push $IMG_UPLOAD"
-    exit
+  ./build.sh local_version --project $TARGET_PROJECT --push_image
+  if [[ $? -ne 0 ]]; then
+    echo "Failed to build/push image from local source file."
+    exit 1
   fi
-  createDockerfile $DEPLOY_DIR $IMG_UPLOAD
+  createDockerfile $DEPLOY_DIR $UPLOADED_LOCAL_BUILD_IMG
 elif [[ "$USE_TEST_IMG" = true ]]; then
   createDockerfile $DEPLOY_DIR $PRE_BUILD_IMG_TEST
 else
@@ -346,7 +350,6 @@ fi
 
 gcloud --quiet preview app deploy --force $DEPLOY_DIR/app.yaml --project $TARGET_PROJECT \
   --version v1 --set-default
-rm -rf $DEPLOY_DIR
 if isHealthy $TARGET_PROJECT jenkins; then
   echo
   echo "*** Jenkins successfully deployed! ***"
