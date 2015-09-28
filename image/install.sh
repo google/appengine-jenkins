@@ -301,7 +301,7 @@ if [[ "$YESORNO" != "y" && "$YESORNO" != "Y" ]]; then
 fi
 
 if [[ "$SEND_USAGE_REPORTS" = true ]]; then
-  gcloud compute project-info add-metadata --metadata google_report_analytics_id=UA-36037335-9,google_report_usage=true --project $TARGET_PROJECT
+  gcloud compute project-info add-metadata --metadata google_report_analytics_id=UA-36037335-1,google_report_usage=true --project $TARGET_PROJECT
 else
   gcloud compute project-info remove-metadata --keys google_report_analytics_id,google_report_usage --project $TARGET_PROJECT
 fi
