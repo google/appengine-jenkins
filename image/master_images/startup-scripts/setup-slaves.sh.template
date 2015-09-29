@@ -23,7 +23,7 @@ CLI_JAR=jenkins-cli.jar
 RETRY=1200
 SLEEP=5 #seconds
 SUCCESS=""
-echo "download Jenkins CLI jar ..."
+echo "Downloading Jenkins CLI jar ..."
 for TRY in $(seq 1 $RETRY); do
   curl -O http://$MASTER:$JMPORT/jnlpJars/$CLI_JAR|| true
   # Verify that a jar file, not the "Please wait for Jenkins to be up" page
@@ -94,7 +94,7 @@ CONFIG_XML_SLAVE
 # know its IP.
 export PARENT_IP=\$(/sbin/ip route | awk '/default/ {print \$3}')
 export SLAVE_SUCCESS=""
-echo "download Jenkins Slave jar ..."
+echo "Downloading Jenkins Slave jar ..."
 for TRY in \$(seq 1 $RETRY); do
   curl -O http://\$PARENT_IP:$JMPORT/jnlpJars/$SLAVE_JAR|| true
   # Verify that a jar file, not the "Please wait for Jenkins to be up" page
@@ -107,11 +107,21 @@ for TRY in \$(seq 1 $RETRY); do
   sleep $SLEEP
 done
 
-# Download the slave-agent.jnlp file. At this point Jenkins is already up,
-# therefore we won't see the "Please wait for Jenkins..." page any more.
+export JNLP_SUCCESS=""
 export JNLP_FILE=slave-agent.jnlp
-curl  --retry $RETRY --retry-delay $SLEEP \
+echo "Downloading Jenkins Slave-Agent JNLP file ..."
+for TRY in \$(seq 1 $RETRY); do
+  curl  --retry $RETRY --retry-delay $SLEEP \
   -O http://\$PARENT_IP:$JMPORT/computer/$SLAVE_NAME/\$JNLP_FILE
+  # Verify that a jnlp file, not the "Please wait for Jenkins to be up" page
+  # was downloaded. This should also cover the case that no file was downloaded.
+  if head -1 $JNLP_FILE | grep -q "^jnlp"; then
+    JNLP_SUCCESS=true
+    break;
+  fi
+  echo "Jenkins may not be up and running yet, waiting..." 1>&2
+  sleep $SLEEP
+done
 
 # The slaves stay up until the host VM is torn down,
 # so ensure things stay up.  This allows us to reconnect
