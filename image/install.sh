@@ -264,7 +264,16 @@ function isHealthy() {
   return 1
 }
 
+function checkGcloudComponents() {
+  echo "Install gcloud beta component if it is not installed yet ..."
+  yes | gcloud beta --help > /dev/null 2>&1
+  echo "Install gcloud preview component if it is not installed yet ..."
+  yes | gcloud preview --help > /dev/null 2>&1
+}
+
 parseArguments $@
+checkGcloudComponents
+
 if [[ -z $TARGET_PROJECT ]]; then
   CURRENT_PROJECT=`gcloud config list project | \
     awk 'BEGIN{FS="="} /project\s*=/ {print $2}' | tr -d '[[:space:]]'`
@@ -322,7 +331,8 @@ PRE_BUILD_IMG_TEST="gcr.io/developer_tools_bundle/jenkins:testing"
 UPLOADED_LOCAL_BUILD_IMG="gcr.io/"${TARGET_PROJECT}"/jenkins:local_version"
 
 if ! networkExists $TARGET_PROJECT jenkins; then
-  gcloud --quiet compute networks create jenkins --project $TARGET_PROJECT
+  gcloud --quiet compute networks create jenkins --project $TARGET_PROJECT \
+    --range 10.240.0.0/16
   if [ $? -ne 0 ]; then
     echo
     echo "*** 'gcloud compute networks create jenkins' failed. ***"
@@ -348,7 +358,7 @@ else
   createDockerfile $DEPLOY_DIR $PRE_BUILD_IMG
 fi
 
-gcloud --quiet preview app deploy --force $DEPLOY_DIR/app.yaml --project $TARGET_PROJECT \
+gcloud --quiet preview app deploy --docker-build=remote --force $DEPLOY_DIR/app.yaml --project $TARGET_PROJECT \
   --version v1 --set-default
 if isHealthy $TARGET_PROJECT jenkins; then
   echo
