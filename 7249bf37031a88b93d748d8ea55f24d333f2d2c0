@@ -1,0 +1,1 @@
+{"timestamp":"1443574317","reviewRef":"refs/heads/features/astroilov-log-setup-slaves","targetRef":"refs/heads/master","requester":"astroilov@google.com","description":"Configure logging to App Engine custom logs directory.\nAdd retry code for JNLP file."}
