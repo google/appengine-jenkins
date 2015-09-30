@@ -1,0 +1,1 @@
+{"timestamp":"1443650538","reviewRef":"refs/heads/weizheng/delete-redunt-startup-scripts","targetRef":"refs/heads/master","requester":"weizheng@google.com","reviewers":["astroilov"],"description":"delete redudant images/startup-scripts folder"}
