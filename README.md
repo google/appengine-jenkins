@@ -16,19 +16,29 @@ setup, and you must have these APIs enabled in your project:
 - Google Cloud Storage
 
 If you want to deploy from the source code, run:
-   (in the /bundle directory)
-   ./build.sh
-   (in the /image directory)
-   ./install.sh --project <your project> --build_from_src
+
+    (in the /bundle directory)
+    ./build.sh
+    (in the /image directory)
+    ./install.sh --project <your project> --build_from_src
+   
 If you want to deploy using the pre-built Docker image instead of from the source
 code, run:
-   ./install.sh --project <your project>
-run
-   './insall.sh --help' to see more command line options.
+
+    (in the /image directory)
+    ./install.sh --project <your project>
+   
+To see more command line options, run:
+
+    (in the /image directory)
+    ./insall.sh --help
+   
 If you want to build and push the stable/testing version of Docker image, run:
-   (in the /bundle directory)
-   ./build.sh
-   (in the image directory)
-   ./build.sh testing|stable --push_image
-   However, you must have write permission to the GCR repo where these images
-   are stored in order to do so.
+
+    (in the /bundle directory)
+    ./build.sh
+   
+    (in the image directory)
+    ./build.sh testing|stable --push_image
+   
+However, you must have write permission to the GCR repo where these images are stored in order to do so.
