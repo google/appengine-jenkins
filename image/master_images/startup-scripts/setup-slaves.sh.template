@@ -103,7 +103,7 @@ for TRY in \$(seq 1 $RETRY); do
     SLAVE_SUCCESS=true
     break;
   fi
-  echo "Jenkins may not be up and running yet, waiting..." 1>&2
+  echo "Cant't download $SLAVE_JAR, Jenkins may not be up and running yet, waiting..." 1>&2
   sleep $SLEEP
 done
 
@@ -115,11 +115,11 @@ for TRY in \$(seq 1 $RETRY); do
   -O http://\$PARENT_IP:$JMPORT/computer/$SLAVE_NAME/\$JNLP_FILE
   # Verify that a jnlp file, not the "Please wait for Jenkins to be up" page
   # was downloaded. This should also cover the case that no file was downloaded.
-  if head -1 $JNLP_FILE | grep -q "^<jnlp"; then
+  if head -1 \$JNLP_FILE | grep -q "^<jnlp"; then
     JNLP_SUCCESS=true
     break;
   fi
-  echo "Jenkins may not be up and running yet, waiting..." 1>&2
+  echo "Failed to download \$JNLP_FILE, Jenkins may not be up and running yet, waiting..." 1>&2
   sleep $SLEEP
 done
 
