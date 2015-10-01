@@ -115,7 +115,7 @@ for TRY in \$(seq 1 $RETRY); do
   -O http://\$PARENT_IP:$JMPORT/computer/$SLAVE_NAME/\$JNLP_FILE
   # Verify that a jnlp file, not the "Please wait for Jenkins to be up" page
   # was downloaded. This should also cover the case that no file was downloaded.
-  if head -1 $JNLP_FILE | grep -q "^jnlp"; then
+  if head -1 $JNLP_FILE | grep -q "^<jnlp"; then
     JNLP_SUCCESS=true
     break;
   fi
