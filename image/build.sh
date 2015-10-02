@@ -216,7 +216,7 @@ do
   echo "Creating $SLAVE_NAME Dockerfile from template ..."
   createDockerfileFromTemplate slave_images/${SLAVE_NAME} ${SLAVE_NAME}_$BUILD_TYPE $ENV_VARS
   echo "Building Docker images now ..."
-  buildDockerImage base_$BUILD_TYPE $LOCAL_IMG $REMOTE_IMG
+  buildDockerImage ${SLAVE_NAME}_$BUILD_TYPE $LOCAL_IMG $REMOTE_IMG
   if [[ $PUSH_IMG == true ]]; then
     echo "Pushing $REMOTE_IMG now ..."
     pushDockerImage $REMOTE_IMG
