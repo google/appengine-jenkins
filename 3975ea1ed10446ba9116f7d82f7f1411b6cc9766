@@ -1,1 +1,3 @@
 {"timestamp":"1443811888","reviewRef":"refs/heads/weizheng/fix-slave-build-from-base-dir","targetRef":"refs/heads/master","requester":"weizheng@google.com","reviewers":["ojarjur","astroilov"],"description":"slave images were build under base image folder"}
+
+{"timestamp":"1443814526","reviewRef":"refs/heads/weizheng/fix-slave-build-from-base-dir-2","targetRef":"refs/heads/master","requester":"weizheng@google.com","reviewers":["astroilov","ojarjur"],"description":"slave images were build under base image folder"}
