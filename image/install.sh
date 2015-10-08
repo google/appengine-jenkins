@@ -220,6 +220,9 @@ handlers:
   static_files: favicon.ico
   upload: favicon.ico
 
+- url: /github-webhook.*
+  script: main.application
+
 # Main app.  All the real work is here.
 - url: /.*
   script: main.application
