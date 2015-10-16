@@ -250,25 +250,25 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>google-analytics-usage-reporter</artifactId>
-              <version>0.3</version>
+              <version>0.4</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>google-cloud-backup</artifactId>
-              <version>0.1</version>
+              <version>0.3</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>google-cloud-health-check</artifactId>
-              <version>0.2</version>
+              <version>0.3</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>google-git-notes-publisher</artifactId>
-              <version>0.2</version>
+              <version>0.3</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
@@ -280,7 +280,7 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>google-oauth-plugin</artifactId>
-              <version>0.3</version>
+              <version>0.4</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
