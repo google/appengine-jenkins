@@ -28,7 +28,3 @@ RUN go get google.golang.org/appengine
 
 # This is needed to translate Go test output into xUnit as the canonical test result format
 RUN go get bitbucket.org/tebeka/go2xunit
-
-# Set up a GOROOT from the Cloud SDK and put goapp on the path
-ENV GOROOT $CLOUD_SDK/platform/google_appengine/goroot/
-ENV PATH $GOROOT/bin:$PATH
