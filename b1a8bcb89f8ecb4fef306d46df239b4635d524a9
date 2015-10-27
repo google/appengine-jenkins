@@ -1,0 +1,1 @@
+{"timestamp":"1445980113","reviewRef":"refs/heads/features/astroilov-remove-extra-gcloud-checks","targetRef":"refs/heads/master","requester":"astroilov@google.com","reviewers":["ojarjur"],"description":"Use bash -e. Add --quiet. Remove unnecessary checks."}
