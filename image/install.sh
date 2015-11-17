@@ -220,6 +220,36 @@ handlers:
   static_files: favicon.ico
   upload: favicon.ico
 
+# Unsecured Jenkins handlers.
+- url: /cli($|\/.*)
+  script: main.application
+  login: optional
+  secure: always
+- url: /git($|\/.*)
+  script: main.application
+  login: optional
+  secure: always
+- url: /jnlpJars($|\/.*)
+  script: main.application
+  login: optional
+  secure: always
+- url: /mercurial($|\/.*)
+  script: main.application
+  login: optional
+  secure: always
+- url: /subversion($|\/.*)
+  script: main.application
+  login: optional
+  secure: always
+- url: /whoAmI($|\/.*)
+  script: main.application
+  login: optional
+  secure: always
+- url: /tcpSlaveAgentListener($|\/.*)
+  script: main.application
+  login: optional
+  secure: always
+
 # Main app.  All the real work is here.
 - url: /.*
   script: main.application

@@ -74,4 +74,4 @@ chown_cat $JENKINS_HOME/jenkins.model.JenkinsLocationConfiguration.xml << LOCATI
 </jenkins.model.JenkinsLocationConfiguration>
 LOCATION_CONFIG_XML
 
-java -jar jenkins.war --httpPort=5000 --logfile=/var/log/app_engine/custom_logs/jenkins.log
+java -Dhudson.TcpSlaveAgentListener.hostName="jenkins-dot-${PROJECT_ID}.appspot.com" -jar jenkins.war --httpPort=5000 --logfile=/var/log/app_engine/custom_logs/jenkins.log
