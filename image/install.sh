@@ -211,6 +211,8 @@ health_check:
   restart_threshold: 60
 
 network:
+  forwarded_ports:
+  - 4000
   name: jenkins
 
 handlers:
