@@ -1,0 +1,6 @@
+.classpath
+.project
+bundle/target/
+image/master_images/google-jenkins.war
+image/tmp_build_dir/
+
