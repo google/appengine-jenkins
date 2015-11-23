@@ -247,7 +247,6 @@ case $BUILD_TYPE in
     ;;
 esac
 echo "Creating master Dockerfile from template ..."
-echo "Updating version for master_image"
 createDockerfileFromTemplate master_images master_$BUILD_TYPE $ENV_VARS
 ENV_VARS="_SDC_=$SDC _SLAVE_IMG_PREFIX_=${SLAVE_IMG_PREFIX} _SLAVE_IMG_LABEL_=${SLAVE_IMG_LABEL}"
 createSlaveSetupScriptFromTemplate master_$BUILD_TYPE $ENV_VARS

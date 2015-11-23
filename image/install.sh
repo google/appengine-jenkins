@@ -363,7 +363,7 @@ else
   createDockerfile $DEPLOY_DIR $PRE_BUILD_IMG
 fi
 
-gcloud --quiet preview app deploy --docker-build=local --force $DEPLOY_DIR/app.yaml --project $TARGET_PROJECT \
+gcloud --quiet preview app deploy --docker-build=remote --force $DEPLOY_DIR/app.yaml --project $TARGET_PROJECT \
   --version v1 --set-default
 if isHealthy $TARGET_PROJECT jenkins; then
   echo
