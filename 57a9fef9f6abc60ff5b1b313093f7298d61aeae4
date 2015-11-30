@@ -1,0 +1,1 @@
+{"timestamp":"1448923081","author":"astroilov","location":{"commit":"1947fd0c742dbdf1259199b63e613c256ceedb1d","path":"image/master_images/jenkins/jenkins_upgrade_version","range":{"startLine":1}},"description":"Consider something more verbose/fine-grained, like a build timestamp."}
