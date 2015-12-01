@@ -7,3 +7,5 @@
 {"timestamp":"1448923081","author":"astroilov","location":{"commit":"1947fd0c742dbdf1259199b63e613c256ceedb1d","path":"image/install.sh","range":{"startLine":45}},"description":"Specify what the default value of this flag is, and that this is a project-wide setting. Also consider adding this to the \"confirmation prompt\" which currently shows disk, ram, etc. and asks the user to verify the values before proceeding."}
 
 {"timestamp":"1448929101","author":"ckerur","location":{"commit":"1947fd0c742dbdf1259199b63e613c256ceedb1d","path":"image/install.sh","range":{"startLine":45}},"description":"Will do"}
+
+{"timestamp":"1448929101","author":"ckerur","location":{"commit":"1947fd0c742dbdf1259199b63e613c256ceedb1d","path":"image/install.sh","range":{"startLine":277}},"description":"So, I had trouble finding where the main program really begins and helper functions stop. I added this for clarity only"}
