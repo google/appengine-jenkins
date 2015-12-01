@@ -45,7 +45,7 @@ Usage: $shell_name [--project PROJECT] [--cpu CPU] [--memory MEMORY] [--disk DIS
          On Jenkins restart after upgrade, backup changes will overwrite disk changes if you use this flag.
 	 This means, pre-installed Jenkins settings/plugins may not work. 
          Regular jenkins restart(non upgrades) will still favour backup changes
-         so user configurations are not lost. 
+         so user configurations are not lost. This is a project-wide setting and will default to false. 
        Omit cpu/memory/disk/on_conflict_restore_from_backup options to use default value.
 
        Example: $shell_name --project my_project_id --cpu 3 --memory 6
@@ -106,7 +106,6 @@ function parseArguments() {
 	SEND_USAGE_REPORTS=true
         ;;
       --on_conflict_restore_from_backup)
-	echo "here"
         RESTORE_FROM_BACKUP=true
 	;;
       -h|--help|*)
@@ -274,7 +273,7 @@ function isHealthy() {
   return 1
 }
 
-######## _MAIN_ #######################
+############### _MAIN_ ###############
 
 parseArguments $@
 
@@ -288,7 +287,7 @@ if [[ -z $TARGET_PROJECT ]]; then
   exit 1
 fi
 echo "You will deploy the following component to project '$TARGET_PROJECT'"
-echo "  Jenkins: CPU-$JENKINS_CPU, Memory-${JENKINS_MEMORY}GB, Disk-${JENKINS_DISK}GB"
+echo "  Jenkins: CPU-$JENKINS_CPU, Memory-${JENKINS_MEMORY}GB, Disk-${JENKINS_DISK}GB, On conflict overwrite from backup-${RESTORE_FROM_BACKUP}"
 if [[ "$BUILD_FROM_SRC" = true ]]; then
   echo "  Using Docker image built from your local source code."
 elif [[ "$USE_TEST_IMG" = true ]]; then
