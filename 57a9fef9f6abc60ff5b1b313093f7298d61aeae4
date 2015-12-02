@@ -11,3 +11,5 @@
 {"timestamp":"1448929101","author":"ckerur","location":{"commit":"1947fd0c742dbdf1259199b63e613c256ceedb1d","path":"image/install.sh","range":{"startLine":277}},"description":"So, I had trouble finding where the main program really begins and helper functions stop. I added this for clarity only"}
 
 {"timestamp":"1448929101","author":"ckerur","location":{"commit":"1947fd0c742dbdf1259199b63e613c256ceedb1d","path":"image/master_images/jenkins/jenkins_upgrade_version","range":{"startLine":1}},"description":"The intent of this when \"we\" or the Google app engine Jenkins team wants to do a new release, not everytime we necessarily build.\nI thought to keep it simple for now with just version number.I was thinking of possibly just having a unique identifier (instead of a number) eventually ? Like a gaia id ... \n\nThe build timestamp will help knowing, when this was last released by the team.. Do you think that is more useful to the end user ? If they were keen on knowing that is github not sufficient ?"}
+
+{"timestamp":"1449090787","author":"astroilov","resolved":true}
