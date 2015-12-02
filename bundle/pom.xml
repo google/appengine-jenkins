@@ -14,7 +14,7 @@
     <dependency>
       <groupId>org.jenkins-ci.main</groupId>
       <artifactId>jenkins-war</artifactId>
-      <version>1.627</version>
+      <version>1.638</version>
       <type>war</type>
     </dependency>
   </dependencies>
@@ -52,13 +52,13 @@
             <artifactItem>
               <groupId>org.jvnet.hudson.plugins</groupId>
               <artifactId>checkstyle</artifactId>
-              <version>3.42</version>
+              <version>3.43</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
               <groupId>org.jvnet.hudson.plugins</groupId>
               <artifactId>findbugs</artifactId>
-              <version>4.61</version>
+              <version>4.62</version>
               <type>hpi</type>
             </artifactItem>
             <!-- bundle non-Google plugins from jenkins-ci -->
@@ -71,13 +71,13 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>branch-api</artifactId>
-              <version>0.2-beta-3</version>
+              <version>1.0</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>build-pipeline-plugin</artifactId>
-              <version>1.4.7</version>
+              <version>1.4.8</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
@@ -95,7 +95,7 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>credentials</artifactId>
-              <version>1.22</version>
+              <version>1.24</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
@@ -146,7 +146,7 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>mailer</artifactId>
-              <version>1.15</version>
+              <version>1.16</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
@@ -165,7 +165,7 @@
             <artifactItem>
               <groupId>org.jenkins-ci.main</groupId>
               <artifactId>maven-plugin</artifactId>
-              <version>2.12</version>
+              <version>2.12.1</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
@@ -189,7 +189,7 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>parameterized-trigger</artifactId>
-              <version>2.28</version>
+              <version>2.29</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
@@ -213,7 +213,7 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>scm-api</artifactId>
-              <version>0.2</version>
+              <version>1.0</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
