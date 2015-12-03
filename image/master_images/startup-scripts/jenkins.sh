@@ -30,6 +30,7 @@ PROJECT_NUM=$(curl -f http://metadata/computeMetadata/v1beta1/project/numeric-pr
 METRICS_OPTIN=$(curl -f http://metadata/computeMetadata/v1beta1/project/attributes/google_report_usage || false)
 ANALYTICS_ID=$(curl -f http://metadata/computeMetadata/v1beta1/project/attributes/google_report_analytics_id || false)
 PROJECT_ID=$(curl -f http://metadata/computeMetadata/v1beta1/project/project-id || true)
+RESTORE_FROM_BACKUP=$(curl -f http://metadata/computeMetadata/v1beta1/project/attributes/restore_from_backup || false)
 
 if [[ -n "$PROJECT_NUM" ]]; then
   HASHED_PROJECT_NUM=$(echo -n "$PROJECT_NUM" | sha1sum | awk '{print $1}')
@@ -48,7 +49,7 @@ chown_cat $JENKINS_HOME/google-cloud-backup.xml <<BACKUP_XML
 <com.google.jenkins.plugins.persistentmaster.PersistentMasterPlugin plugin="google-cloud-backup@0.2">
   <enableBackup>true</enableBackup>
   <enableAutoRestore>true</enableAutoRestore>
-  <restoreOverwritesData>false</restoreOverwritesData>
+  <restoreOverwritesData>$RESTORE_FROM_BACKUP</restoreOverwritesData>
   <fullBackupIntervalHours>1</fullBackupIntervalHours>
   <incrementalBackupIntervalMinutes>3</incrementalBackupIntervalMinutes>
   <storageProvider class="com.google.jenkins.plugins.persistentmaster.storage.GcloudGcsStorageProvider">
