@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # Copyright 2015 Google Inc. All rights reserved.
 #
@@ -20,7 +20,7 @@ function showUsage() {
   local shell_name=`basename $0`
   cat << EOF
 Usage: $shell_name [--project PROJECT] [--cpu CPU] [--memory MEMORY] [--disk DISK]
-                  [--build_from_src] [--use_test_img]
+                  [--build_from_src] [--use_test_img] [--on_conflict_restore_from_backup]
        --project PROJECT
            Sets the Google Cloud project you want to deploy to. PROJECT is the id
            of the project. If this option is not provided, default to the current
@@ -41,8 +41,12 @@ Usage: $shell_name [--project PROJECT] [--cpu CPU] [--memory MEMORY] [--disk DIS
        --report_usage
          Enable anonymized usage reports. Jenkins usage information will be sent to
          Google via the Google Usage Reporting plugin. This is a project-wide setting.
-
-       Omit cpu/memory/disk options to use default value.
+       --on_conflict_restore_from_backup
+         On Jenkins restart after upgrade, backup changes will overwrite disk changes if you use this flag.
+	 This means, pre-installed Jenkins settings/plugins may not work. 
+         Regular jenkins restart(non upgrades) will still favour backup changes
+         so user configurations are not lost. This is a project-wide setting and will default to false. 
+       Omit cpu/memory/disk/on_conflict_restore_from_backup options to use default value.
 
        Example: $shell_name --project my_project_id --cpu 3 --memory 6
 EOF
@@ -65,7 +69,9 @@ function verifyAgainstMinimum() {
 DEPLOY_FLAVOR=stable
 function parseArguments() {
   SHOW_USAGE=false
+  RESTORE_FROM_BACKUP=false
   SEND_USAGE_REPORTS=false
+  
   while [[ -n "$1" ]]; do
     case $1 in
       --project)
@@ -97,8 +103,11 @@ function parseArguments() {
         DEPLOY_FLAVOR=testing
         ;;
       --report_usage)
-        SEND_USAGE_REPORTS=true
+	SEND_USAGE_REPORTS=true
         ;;
+      --on_conflict_restore_from_backup)
+        RESTORE_FROM_BACKUP=true
+	;;
       -h|--help|*)
         SHOW_USAGE=true
         break
@@ -118,7 +127,7 @@ function parseArguments() {
 
 function defaultModuleExists() {
   local project=$1
-  local count=$(gcloud preview app modules list default --project $project 2>&1 \
+  local count=$(gcloud --quiet preview app modules list default --project $project 2>&1 \
     | grep -o "^default" | wc -l)
   if [[ $count -gt 0 ]]; then
     return 0
@@ -155,7 +164,7 @@ EOF
 </html>
 EOF
   local status=1
-  gcloud preview app deploy --force --quiet --project $target_project \
+  gcloud --quiet preview app deploy --force --project $target_project \
     $tmp_dir/app.yaml --version v1
   [[ $? ]] && succeeded=0 || echo "Failed to deploy default module to $target_project"
   rm -rf $tmp_dir
@@ -165,7 +174,7 @@ EOF
 function networkExists() {
   local project=$1
   local network=$2
-  gcloud compute networks list $network --project $project --format yaml \
+  gcloud --quiet compute networks list $network --project $project --format yaml \
     | grep "^name:\s*$network$" > /dev/null 2>&1
   return $?
 }
@@ -236,10 +245,10 @@ function buildLocalImg() {
   local img_upload=$2
   if groups $USER | grep &>/dev/null '\bdocker\b'; then
     docker build -t $img . && docker tag -f $img $img_upload \
-      && gcloud docker push $img_upload
+      && gcloud --quiet docker push $img_upload
   else
     sudo docker build -t $img . && sudo docker tag -f $img $img_upload \
-      && gcloud docker push $img_upload
+      && gcloud --quiet docker push $img_upload
   fi
 }
 
@@ -267,32 +276,21 @@ function isHealthy() {
   return 1
 }
 
-function checkGcloudComponents() {
-  echo "Install gcloud beta component if it is not installed yet ..."
-  yes | gcloud beta --help > /dev/null 2>&1
-  echo "Install gcloud preview component if it is not installed yet ..."
-  yes | gcloud preview --help > /dev/null 2>&1
-}
+############### _MAIN_ ###############
 
 parseArguments $@
-checkGcloudComponents
 
 if [[ -z $TARGET_PROJECT ]]; then
-  CURRENT_PROJECT=`gcloud config list project | \
+  CURRENT_PROJECT=`gcloud --quiet config list project | \
     awk 'BEGIN{FS="="} /project\s*=/ {print $2}' | tr -d '[[:space:]]'`
   TARGET_PROJECT=$CURRENT_PROJECT
 fi
 if [[ -z $TARGET_PROJECT ]]; then
   echo "There is no project set in your gcloud config, so you must specify the project."
   exit 1
-else
-  if ! gcloud beta projects describe $TARGET_PROJECT > /dev/null 2>&1; then
-    echo "Project $TARGET_PROJECT doesn't exist."
-    exit 1
-  fi
 fi
 echo "You will deploy the following component to project '$TARGET_PROJECT'"
-echo "  Jenkins: CPU-$JENKINS_CPU, Memory-${JENKINS_MEMORY}GB, Disk-${JENKINS_DISK}GB"
+echo "  Jenkins: CPU-$JENKINS_CPU, Memory-${JENKINS_MEMORY}GB, Disk-${JENKINS_DISK}GB, On conflict overwrite from backup-${RESTORE_FROM_BACKUP}"
 if [[ "$BUILD_FROM_SRC" = true ]]; then
   echo "  Using Docker image built from your local source code."
 elif [[ "$USE_TEST_IMG" = true ]]; then
@@ -313,9 +311,15 @@ if [[ "$YESORNO" != "y" && "$YESORNO" != "Y" ]]; then
 fi
 
 if [[ "$SEND_USAGE_REPORTS" = true ]]; then
-  gcloud compute project-info add-metadata --metadata google_report_analytics_id=UA-36037335-1,google_report_usage=true --project $TARGET_PROJECT
+  gcloud --quiet compute project-info add-metadata --metadata google_report_analytics_id=UA-36037335-1,google_report_usage=true --project $TARGET_PROJECT
 else
-  gcloud compute project-info remove-metadata --keys google_report_analytics_id,google_report_usage --project $TARGET_PROJECT
+  gcloud --quiet compute project-info remove-metadata --keys google_report_analytics_id,google_report_usage --project $TARGET_PROJECT
+fi
+
+if [[ "$RESTORE_FROM_BACKUP" = true ]]; then
+  gcloud --quiet compute project-info add-metadata --metadata restore_from_backup=true --project $TARGET_PROJECT
+else
+  gcloud --quiet compute project-info remove-metadata --keys restore_from_backup --project $TARGET_PROJECT
 fi
 
 echo
