@@ -42,6 +42,12 @@
               <version>1.25</version>
               <type>hpi</type>
             </artifactItem>
+            <artifactItem>
+              <groupId>org.csanchez.jenkins.plugins</groupId>
+              <artifactId>kubernetes</artifactId>
+              <version>0.4.1</version>
+              <type>hpi</type>
+            </artifactItem>
             <!-- bundle non-Google plugins from jvnet.hudson -->
             <artifactItem>
               <groupId>org.jvnet.hudson.plugins</groupId>
@@ -106,6 +112,12 @@
             </artifactItem>
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
+              <artifactId>durable-task</artifactId>
+              <version>1.6</version>
+              <type>hpi</type>
+            </artifactItem>
+            <artifactItem>
+              <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>git</artifactId>
               <version>2.4.0</version>
               <type>hpi</type>
@@ -122,7 +134,7 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>htmlpublisher</artifactId>
-              <version>1.6</version>
+              <version>1.9</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
@@ -238,6 +250,12 @@
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>throttle-concurrents</artifactId>
               <version>1.8.4</version>
+              <type>hpi</type>
+            </artifactItem>
+            <artifactItem>
+              <groupId>org.jenkins-ci.plugins.workflow</groupId>
+              <artifactId>workflow-step-api</artifactId>
+              <version>1.11</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
