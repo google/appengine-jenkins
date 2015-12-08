@@ -7,17 +7,15 @@ set -e
 function showUsage() {
   local shell_name=`basename $0`
   cat << EOF
-Usage: $shell_name <testing\|stable\|local_version> [--project PROJECT] [--push_image]
+Usage: $shell_name <testing|local_version> [--project PROJECT] [--push_image]
        testing: build testing version Docker images, and tag them as
            gcr.io/developer_tools_bundle/<image_name>:testing
-       stable: build stable version of Docker images and tag them as
-           gcr.io/developer_tools_bundle/<image_name>:latest
        local_version: build local version of the image, and tag them as
            tagged as gcr.io/${TARGET}/<image_name>:local_version.
            So this requires --project parameter to be provided
        --project PROJECT: only needed when local_version is specified.
            This is the GCP project that you want to deploy to.
-       --push: push the images to gcr.io
+       --push_image: push the images to gcr.io
 
        If on your machine docker must be run as root user, you will be prompted for
        root password by 'sudo docker ...'.
@@ -32,7 +30,7 @@ function parseArguments() {
     showUsage $0
     exit
   fi
-  if [[ $1 == "testing" || $1 == "stable" || $1 == "local_version" ]]; then
+  if [[ $1 == "testing" || $1 == "local_version" ]]; then
     BUILD_TYPE=$1
   else
     showUsage $0
@@ -62,14 +60,6 @@ function parseArguments() {
     if [[ -z $TARGET_PROJECT ]]; then
       echo "--project parameter is missing"
       showUsage $0
-      exit
-    fi
-  fi
-
-  if [[ $BUILD_TYPE == "stable" && $PUSH_IMG == "true" ]]; then
-    read -p "Please confirm that you are going to push stable images [y|N]" YESORNO
-    if [[ "$YESORNO" != "y" && "$YESORNO" != "Y" ]]; then
-      echo "Build canceled"
       exit
     fi
   fi
@@ -150,6 +140,8 @@ function pushDockerImage() {
 }
 
 parseArguments $@
+NESTED_IMAGE_TAG="$(date -u +%Y-%m-%d-%H-%M)"
+LOCAL_IMG=google/jenkins-base:${NESTED_IMAGE_TAG}
 
 echo
 echo "=========================================================="
@@ -157,18 +149,11 @@ echo Building $BUILD_TYPE base image now
 echo "=========================================================="
 case $BUILD_TYPE in
   testing)
-    LOCAL_IMG=google/jenkins-base:testing
-    REMOTE_IMG=gcr.io/developer_tools_bundle/jenkins-base:testing
-    ENV_VARS=""
-    ;;
-  stable)
-    LOCAL_IMG=google/jenkins-base:latest
-    REMOTE_IMG=gcr.io/developer_tools_bundle/jenkins-base:latest
+    REMOTE_IMG=gcr.io/developer_tools_bundle/jenkins-base:${NESTED_IMAGE_TAG}
     ENV_VARS=""
     ;;
   local_version)
-    LOCAL_IMG=google/jenkins-base:local_version
-    REMOTE_IMG=gcr.io/${TARGET_PROJECT}/jenkins-base:local_version
+    REMOTE_IMG=gcr.io/${TARGET_PROJECT}/jenkins-base:${NESTED_IMAGE_TAG}
     ENV_VARS=""
     ;;
 esac
@@ -196,21 +181,15 @@ do
   else
     SDC=${SDC},${SLAVE_NAME}
   fi
+  LOCAL_IMG=google/${SLAVE_NAME}:${NESTED_IMAGE_TAG}
   case $BUILD_TYPE in
     testing)
-      LOCAL_IMG=google/${SLAVE_NAME}:testing
-      REMOTE_IMG=gcr.io/developer_tools_bundle/${SLAVE_NAME}:testing
-      ENV_VARS="_BASE_IMG_=gcr.io/developer_tools_bundle/jenkins-base:testing"
-      ;;
-    stable)
-      LOCAL_IMG=google/${SLAVE_NAME}:latest
-      REMOTE_IMG=gcr.io/developer_tools_bundle/${SLAVE_NAME}:latest
-      ENV_VARS="_BASE_IMG_=gcr.io/developer_tools_bundle/jenkins-base:latest"
+      REMOTE_IMG=gcr.io/developer_tools_bundle/${SLAVE_NAME}:${NESTED_IMAGE_TAG}
+      ENV_VARS="_BASE_IMG_=gcr.io/developer_tools_bundle/jenkins-base:${NESTED_IMAGE_TAG}"
       ;;
     local_version)
-      LOCAL_IMG=google/${SLAVE_NAME}:local_version
-      REMOTE_IMG=gcr.io/${TARGET_PROJECT}/${SLAVE_NAME}:local_version
-      ENV_VARS="_BASE_IMG_=gcr.io/${TARGET_PROJECT}/jenkins-base:local_version"
+      REMOTE_IMG=gcr.io/${TARGET_PROJECT}/${SLAVE_NAME}:${NESTED_IMAGE_TAG}
+      ENV_VARS="_BASE_IMG_=gcr.io/${TARGET_PROJECT}/jenkins-base:${NESTED_IMAGE_TAG}"
       ;;
   esac
   echo "Creating $SLAVE_NAME Dockerfile from template ..."
@@ -233,17 +212,12 @@ case $BUILD_TYPE in
   testing)
     LOCAL_IMG=google/jenkins-appengine:testing
     REMOTE_IMG=gcr.io/developer_tools_bundle/jenkins:testing
-    ENV_VARS="_BASE_IMG_=gcr.io/developer_tools_bundle/jenkins-base:testing"
-    ;;
-  stable)
-    LOCAL_IMG=google/jenkins-appengine:latest
-    REMOTE_IMG=gcr.io/developer_tools_bundle/jenkins:latest
-    ENV_VARS="_BASE_IMG_=gcr.io/developer_tools_bundle/jenkins-base:latest"
+    ENV_VARS="_BASE_IMG_=gcr.io/developer_tools_bundle/jenkins-base:${NESTED_IMAGE_TAG}"
     ;;
   local_version)
     LOCAL_IMG=google/jenkins-appengine:local_version
     REMOTE_IMG=gcr.io/${TARGET_PROJECT}/jenkins:local_version
-    ENV_VARS="_BASE_IMG_=gcr.io/${TARGET_PROJECT}/jenkins-base:local_version"
+    ENV_VARS="_BASE_IMG_=gcr.io/${TARGET_PROJECT}/jenkins-base:${NESTED_IMAGE_TAG}"
     ;;
 esac
 echo "Creating master Dockerfile from template ..."

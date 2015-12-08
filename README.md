@@ -21,24 +21,24 @@ If you want to deploy from the source code, run:
     ./build.sh
     (in the /image directory)
     ./install.sh --project <your project> --build_from_src
-   
+
 If you want to deploy using the pre-built Docker image instead of from the source
 code, run:
 
     (in the /image directory)
     ./install.sh --project <your project>
-   
+
 To see more command line options, run:
 
     (in the /image directory)
     ./insall.sh --help
-   
-If you want to build and push the stable/testing version of Docker image, run:
+
+If you want to build and push the testing version of Docker image, run:
 
     (in the /bundle directory)
     ./build.sh
-   
+
     (in the image directory)
-    ./build.sh testing|stable --push_image
-   
+    ./build.sh testing --push_image
+
 However, you must have write permission to the GCR repo where these images are stored in order to do so.
