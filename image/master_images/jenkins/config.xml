@@ -18,7 +18,6 @@
     <headerGroups>X-Forwarded-Groups</headerGroups>
     <headerGroupsDelimiter>|</headerGroupsDelimiter>
   </securityRealm>
-  <authorizationStrategy class="hudson.security.FullControlOnceLoggedInAuthorizationStrategy"/>
   <views>
     <hudson.model.AllView>
       <owner class="hudson" reference="../../.."/>
