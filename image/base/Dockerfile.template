@@ -18,12 +18,15 @@ FROM debian:jessie
 ENV DEBIAN_FRONTEND noninteractive
 ENV MAVEN_VERSION 3.2.2
 ENV GRADLE_VERSION 2.3
+ENV DOCKER_BUCKET get.docker.com
+ENV DOCKER_VERSION 1.9.1
+ENV DOCKER_SHA256 52286a92999f003e1129422e78be3e1049f963be1888afc3c9a99d5a9af04666
+ENV DIND_COMMIT 3b5fac462d21ca164b3778647420016315289034
+
 # Set an environment variable to configure which container server to use.
 # We use the Google Container Registry:
 #     https://cloud.google.com/tools/container-registry/.
 ENV GCLOUD_CONTAINER_SERVER gcr.io
-# Eagerly run this authorization script upon startup.
-ENV ONRUN $ONRUN "/google/scripts/gcloud_docker_auth.sh"
 
 # Install common packages
 RUN apt-get update && apt-get upgrade -y && \
@@ -65,32 +68,27 @@ RUN apt-get update && apt-get upgrade -y && \
   apt-get clean && \
   easy_install -U pip && pip install -U crcmod
 
+RUN curl -fSL "https://${DOCKER_BUCKET}/builds/Linux/x86_64/docker-$DOCKER_VERSION" -o /usr/local/bin/docker \
+	&& echo "${DOCKER_SHA256}  /usr/local/bin/docker" | sha256sum -c - \
+	&& chmod +x /usr/local/bin/docker
+RUN wget "https://raw.githubusercontent.com/docker/docker/${DIND_COMMIT}/hack/dind" -O /usr/local/bin/dind \
+	&& chmod +x /usr/local/bin/dind
+
+COPY dockerd-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/dockerd-entrypoint.sh
+ENV ONRUN $ONRUN "dockerd-entrypoint.sh"
+
+# Eagerly run this authorization script upon startup.
+ENV ONRUN $ONRUN "/google/scripts/gcloud_docker_auth.sh"
+
 # Install a UTF-8 locale by default.
 RUN echo "en_US.UTF-8 UTF-8" >/etc/locale.gen && \
     locale-gen && \
     update-locale LANG=en_US.UTF-8
 
-# Install Docker.
-RUN echo deb https://get.docker.io/ubuntu docker main \
-        > /etc/apt/sources.list.d/docker.list
-RUN apt-key adv \
-        --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        lxc-docker-1.9.1 && \
-    apt-get clean
-
-# Add jpetazzo's magic wrapper.
-# This has been modified to start docker using 'service',
-# which means setting DOCKER_DAEMON_ARGS does nothing.
-# Instead, you can set DOCKER_SETTINGS_FILE to change
-# /etc/default/docker prior to starting the docker service.
-ADD third_party/jpetazzo/dind/wrapdocker /google/scripts/wrapdocker.sh
-RUN chmod +x /google/scripts/wrapdocker.sh
-
 # Must be excluded from aufs.
 VOLUME /var/lib/docker
+EXPOSE 2375
 
 # Make the docker daemon log to a file, so we can realistically use the shell.
 ENV LOG file
@@ -102,9 +100,6 @@ ENV DOCKER_HOST unix:///var/run/docker.sock
 #     ENV ONRUN $ONRUN "echo running my command"
 ADD onrun.sh /google/scripts/onrun.sh
 RUN chmod +x /google/scripts/onrun.sh
-
-# Now run the wrapdocker script on startup.
-ENV ONRUN $ONRUN "/google/scripts/wrapdocker.sh"
 
 # Configure sshd to be used for Devshell connections.
 RUN rm -fv /etc/ssh/ssh_host_*
@@ -147,7 +142,7 @@ RUN $CLOUD_SDK/install.sh \
         --bash-completion=true \
         --path-update=true \
         --disable-installation-options
-ENV PATH $CLOUD_SDK/bin:$PATH
+ENV PATH $CLOUD_SDK/bin:/usr/local/bin:$PATH
 
 # Install the gcloud preview app support and Managed VMs.
 RUN yes | \
