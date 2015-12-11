@@ -14,7 +14,7 @@
     <dependency>
       <groupId>org.jenkins-ci.main</groupId>
       <artifactId>jenkins-war</artifactId>
-      <version>1.638</version>
+      <version>1.641</version>
       <type>war</type>
     </dependency>
   </dependencies>
@@ -52,13 +52,13 @@
             <artifactItem>
               <groupId>org.jvnet.hudson.plugins</groupId>
               <artifactId>checkstyle</artifactId>
-              <version>3.43</version>
+              <version>3.44</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
               <groupId>org.jvnet.hudson.plugins</groupId>
               <artifactId>findbugs</artifactId>
-              <version>4.62</version>
+              <version>4.63</version>
               <type>hpi</type>
             </artifactItem>
             <!-- bundle non-Google plugins from jenkins-ci -->
@@ -77,7 +77,7 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>build-pipeline-plugin</artifactId>
-              <version>1.4.8</version>
+              <version>1.4.9</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
@@ -195,7 +195,7 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>promoted-builds</artifactId>
-              <version>2.22</version>
+              <version>2.24</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
@@ -225,13 +225,13 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>subversion</artifactId>
-              <version>2.5.2</version>
+              <version>2.5.4</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>token-macro</artifactId>
-              <version>1.10</version>
+              <version>1.12</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
@@ -256,7 +256,7 @@
             <artifactItem>
               <groupId>org.jenkins-ci.plugins</groupId>
               <artifactId>google-cloud-backup</artifactId>
-              <version>0.3</version>
+              <version>0.5</version>
               <type>hpi</type>
             </artifactItem>
             <artifactItem>
