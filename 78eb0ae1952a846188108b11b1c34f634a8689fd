@@ -1,0 +1,1 @@
+{"timestamp":"1449872608","reviewRef":"refs/heads/features/astroilov-maven-settings","targetRef":"refs/heads/master","requester":"astroilov@google.com","reviewers":["ojarjur"],"description":"Add m2_settings.xml and configure build.sh to use it."}
