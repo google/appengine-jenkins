@@ -14,5 +14,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-mvn clean verify
+mvn -s m2_settings.xml clean verify
 cp target/google-jenkins-war-0.1-SNAPSHOT.war ../image/master_images/google-jenkins.war

@@ -18,7 +18,7 @@ setup, and you must have these APIs enabled in your project:
 If you want to deploy from the source code, run:
 
     (in the /bundle directory)
-    ./build.sh
+    ./build-bundle.sh
     (in the /image directory)
     ./install.sh --project <your project> --build_from_src
 
