@@ -1,0 +1,1 @@
+{"timestamp":"1453427120","reviewRef":"refs/heads/features/astroilov-update-storage-plugin-0-6","targetRef":"refs/heads/master","requester":"astroilov@google.com","reviewers":["jsand"],"description":"Update plugin and core Jenkins versions.","baseCommit":"e704198cf507737d0d638de04ecc688dea65a977"}
