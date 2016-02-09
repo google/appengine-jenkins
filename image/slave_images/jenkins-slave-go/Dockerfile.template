@@ -18,8 +18,6 @@ FROM $_BASE_IMG_
 
 RUN apt-get update && apt-get install -y --no-install-recommends golang-go && apt-get clean
 
-RUN yes | gcloud components update pkg-go
-
 ENV GOPATH /gopath
 ENV PATH $GOPATH/bin:$PATH
 

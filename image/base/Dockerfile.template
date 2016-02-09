@@ -43,6 +43,7 @@ RUN apt-get update && apt-get upgrade -y && \
       less \
       locales \
       lxc \
+      make \
       man-db \
       manpages \
       mercurial \
@@ -152,12 +153,7 @@ ENV PATH $CLOUD_SDK/bin:$PATH
 # Install the gcloud preview app support and Managed VMs.
 RUN yes | \
     gcloud components update \
-        app \
-        pkg-core \
-        pkg-go \
-        pkg-java \
-        pkg-python \
-        preview
+        core
 
 # Install the Java 7 JDK.
 RUN apt-get update && \

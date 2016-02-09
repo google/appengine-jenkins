@@ -164,7 +164,7 @@ EOF
 </html>
 EOF
   local status=1
-  gcloud --quiet preview app deploy --force --project $target_project \
+  gcloud --quiet preview app deploy --project $target_project \
     $tmp_dir/app.yaml --version v1
   [[ $? ]] && succeeded=0 || echo "Failed to deploy default module to $target_project"
   rm -rf $tmp_dir
@@ -366,8 +366,8 @@ else
   createDockerfile $DEPLOY_DIR $PRE_BUILD_IMG
 fi
 
-gcloud --quiet preview app deploy --docker-build=remote --force $DEPLOY_DIR/app.yaml --project $TARGET_PROJECT \
-  --version v1 --set-default
+gcloud --quiet preview app deploy --docker-build=remote $DEPLOY_DIR/app.yaml --project $TARGET_PROJECT \
+  --version v1
 if isHealthy $TARGET_PROJECT jenkins; then
   echo
   echo "*** Jenkins successfully deployed! ***"
