@@ -1,1 +1,3 @@
 {"timestamp":"1455057588","author":"jsand","resolved":true}
+
+{"timestamp":"1455057588","author":"jsand","location":{"commit":"e82253c41319517d0af8ae4b50680ae3222422d3","path":"image/base/Dockerfile.template","range":{"startLine":156}},"description":"Would core allow for MVM/app engine deployments?"}
