@@ -62,9 +62,9 @@ try:
   config_path = os.environ['CLOUDSDK_CONFIG'] + '/properties'
   config = cp.ConfigParser()
   config.read(config_path)
-  print config.get('core', 'project')
+  print(config.get('core', 'project'))
 except:
-  print ""
+  print("")
 EOF
 }
 
