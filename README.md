@@ -31,7 +31,7 @@ code, run:
 To see more command line options, run:
 
     (in the /image directory)
-    ./insall.sh --help
+    ./install.sh --help
 
 If you want to build and push the testing version of Docker image, run:
 
