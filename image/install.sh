@@ -43,9 +43,9 @@ Usage: $shell_name [--project PROJECT] [--cpu CPU] [--memory MEMORY] [--disk DIS
          Google via the Google Usage Reporting plugin. This is a project-wide setting.
        --on_conflict_restore_from_backup
          On Jenkins restart after upgrade, backup changes will overwrite disk changes if you use this flag.
-	 This means, pre-installed Jenkins settings/plugins may not work. 
+	 This means, pre-installed Jenkins settings/plugins may not work.
          Regular jenkins restart(non upgrades) will still favour backup changes
-         so user configurations are not lost. This is a project-wide setting and will default to false. 
+         so user configurations are not lost. This is a project-wide setting and will default to false.
        Omit cpu/memory/disk/on_conflict_restore_from_backup options to use default value.
 
        Example: $shell_name --project my_project_id --cpu 3 --memory 6
@@ -71,7 +71,7 @@ function parseArguments() {
   SHOW_USAGE=false
   RESTORE_FROM_BACKUP=false
   SEND_USAGE_REPORTS=false
-  
+
   while [[ -n "$1" ]]; do
     case $1 in
       --project)
@@ -245,10 +245,10 @@ function buildLocalImg() {
   local img=$1
   local img_upload=$2
   if groups $USER | grep &>/dev/null '\bdocker\b'; then
-    docker build -t $img . && docker tag -f $img $img_upload \
+    docker build -t $img . && docker tag $img $img_upload \
       && gcloud --quiet docker push $img_upload
   else
-    sudo docker build -t $img . && sudo docker tag -f $img $img_upload \
+    sudo docker build -t $img . && sudo docker tag $img $img_upload \
       && gcloud --quiet docker push $img_upload
   fi
 }

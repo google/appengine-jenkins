@@ -122,10 +122,10 @@ function buildDockerImage() {
   local remote_image=$3
   if groups $USER | grep &>/dev/null '\bdocker\b'; then
     docker build -t $local_image $build_dir_name
-    docker tag -f $local_image $remote_image
+    docker tag $local_image $remote_image
   else
     sudo docker build -t $local_image $build_dir_name
-    sudo docker tag -f $local_image $remote_image
+    sudo docker tag $local_image $remote_image
   fi
 }
 
